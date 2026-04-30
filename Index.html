@@ -1,0 +1,129 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PsiGestão - Clínica de Psicologia</title>
+    
+    <!-- Tailwind CSS para utilitários -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Ícones Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- CSS Externo -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 overflow-hidden flex h-screen">
+
+    <!-- Notificações -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-[200] flex flex-col gap-2"></div>
+
+    <!-- Overlay Lateral (Mobile) -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden opacity-0 pointer-events-none transition-opacity"></div>
+
+    <!-- Menu Lateral (Sidebar) -->
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-72 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 z-50 sidebar-transition transform -translate-x-full lg:translate-x-0 flex flex-col shadow-xl">
+        <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+            <div class="flex items-center gap-3 text-teal-600">
+                <i data-lucide="brain-circuit" class="w-8 h-8"></i>
+                <h1 class="text-xl font-black text-slate-800 dark:text-white uppercase">Psi<span class="text-teal-600">Gestão</span></h1>
+            </div>
+            <button id="close-sidebar-btn" class="lg:hidden p-1 text-slate-400 hover:text-slate-600 transition"><i data-lucide="x" class="w-6 h-6"></i></button>
+        </div>
+        
+        <nav class="p-4 flex-1 space-y-1">
+            <button data-tab="painel" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-all active-tab">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i><span>Início</span>
+            </button>
+            <button data-tab="agenda" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-all">
+                <i data-lucide="calendar" class="w-5 h-5"></i><span>Agenda Mensal</span>
+            </button>
+            <button data-tab="pacientes" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-all">
+                <i data-lucide="users" class="w-5 h-5"></i><span>Pacientes</span>
+            </button>
+            <button data-tab="perfil" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-all">
+                <i data-lucide="settings" class="w-5 h-5"></i><span>Configurações</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="flex-1 flex flex-col lg:ml-72 transition-all h-full">
+        <header class="h-16 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center px-4 lg:px-8 justify-between shrink-0 shadow-sm">
+            <div class="flex items-center gap-4">
+                <button id="open-sidebar-btn" class="lg:hidden p-2 text-slate-600 dark:text-slate-300"><i data-lucide="menu"></i></button>
+                <h2 id="page-title" class="text-lg font-bold">Painel</h2>
+            </div>
+            
+            <div id="calendar-controls" class="hidden items-center gap-3">
+                <button id="prev-month" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                <span id="month-display" class="font-bold text-sm uppercase tracking-wider min-w-[140px] text-center"></span>
+                <button id="next-month" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+            </div>
+
+            <button id="theme-toggle" class="p-2 text-slate-400 hover:text-teal-600 transition">
+                <i data-lucide="moon" class="dark:hidden"></i>
+                <i data-lucide="sun" class="hidden dark:block"></i>
+            </button>
+        </header>
+
+        <div id="main-content" class="flex-1 overflow-y-auto p-4 lg:p-8">
+            <!-- TAB: PAINEL -->
+            <div id="view-painel" class="view-section space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card p-8 border-l-4 border-l-teal-500">
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Total de Pacientes</p>
+                        <h4 id="count-patients" class="text-5xl font-black text-teal-600">0</h4>
+                    </div>
+                    <div class="card p-8 border-l-4 border-l-indigo-500">
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Consultas Hoje</p>
+                        <h4 id="count-today" class="text-5xl font-black text-indigo-600">0</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: AGENDA -->
+            <div id="view-agenda" class="view-section hidden h-full">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm h-full flex flex-col">
+                    <div class="grid grid-cols-7 bg-slate-50 dark:bg-slate-900/50 text-center py-3 border-b border-slate-200 dark:border-slate-700 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+                    </div>
+                    <div id="calendar-grid" class="calendar-grid flex-1 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <!-- TAB: PACIENTES -->
+            <div id="view-pacientes" class="view-section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold">Gerenciamento de Pacientes</h3>
+                    <button class="bg-teal-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-teal-700 transition">Novo Paciente</button>
+                </div>
+                <div id="patients-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Dinâmico -->
+                </div>
+            </div>
+
+            <!-- TAB: PERFIL -->
+            <div id="view-perfil" class="view-section hidden max-w-2xl mx-auto">
+                <div class="card p-8 space-y-6">
+                    <h3 class="text-xl font-bold">Meu Perfil</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Nome Profissional</label>
+                            <input type="text" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border rounded-xl outline-none focus:border-teal-500 transition" placeholder="Ex: Alessandra Bernardes">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase mb-1">CRP</label>
+                            <input type="text" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border rounded-xl outline-none focus:border-teal-500 transition" placeholder="00/00000">
+                        </div>
+                    </div>
+                    <button class="w-full bg-teal-600 text-white py-3 rounded-xl font-bold hover:bg-teal-700 transition">Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript Externo -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
