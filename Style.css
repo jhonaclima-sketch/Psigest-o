@@ -1,0 +1,119 @@
+/* Variáveis de Cores e Estilo */
+:root {
+    --brand-primary: #14b8a6;
+    --brand-dark: #0f766e;
+    --brand-bg-active: #f0fdfa;
+}
+
+/* Transições de Layout */
+.sidebar-transition {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Grid do Calendário Mensal */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    min-height: 0; /* Necessário para scroll interno */
+}
+
+.calendar-day {
+    min-height: 120px;
+    border-right: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 8px;
+    background: white;
+    transition: background-color 0.2s;
+}
+
+.dark .calendar-day {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.calendar-day:nth-child(7n) {
+    border-right: none;
+}
+
+.calendar-day:hover {
+    background-color: #f8fafc;
+}
+
+.dark .calendar-day:hover {
+    background-color: #0f172a;
+}
+
+.calendar-day.not-current {
+    background-color: #fbfcfd;
+    color: #cbd5e1;
+}
+
+.dark .calendar-day.not-current {
+    background-color: #0f172a;
+    opacity: 0.3;
+}
+
+/* Cards e Elementos de UI */
+.card {
+    background: white;
+    border-radius: 1.5rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.dark .card {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.nav-btn.active-tab {
+    background-color: var(--brand-bg-active);
+    color: var(--brand-primary) !important;
+    font-weight: 600;
+}
+
+.dark .nav-btn.active-tab {
+    background-color: rgba(20, 184, 166, 0.1);
+    color: #5eead4 !important;
+}
+
+/* Chips de Eventos (Consultas) */
+.event-chip {
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-top: 4px;
+    background: #f0fdfa;
+    color: #0f766e;
+    border-left: 3px solid var(--brand-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.dark .event-chip {
+    background: #134e4a;
+    color: #ccfbf1;
+}
+
+.event-chip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Scrollbars Customizadas */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+.dark ::-webkit-scrollbar-thumb {
+    background: #475569;
+}
